@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setup() {
-        productDao = new ArrayListProductDao();
+        this.productDao = ArrayListProductDao.getInstance();
     }
 
     @Test
