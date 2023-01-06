@@ -1,6 +1,5 @@
 package com.es.phoneshop.model.product;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,20 +17,20 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products;
 
     private ArrayListProductDao() {
-        this.maxId = 0L;
+        this.maxId = 1L;
         this.products = new ArrayList<>();
     }
 
     @Override
     public synchronized Product getProduct(Long id) throws ProductNotFoundException {
         if (id == null) {
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException(id);
         }
 
         return products.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(new ProductNotFoundException(id));
     }
 
     @Override
