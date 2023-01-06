@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class ArrayListProductDaoTest {
 
         productDao.save(product);
 
-        assertTrue(productDao.findProducts(null).contains(product));
+        assertTrue(productDao.findProducts(null, null, null).contains(product));
     }
 
     @Test
@@ -97,7 +98,7 @@ public class ArrayListProductDaoTest {
 
         productDao.save(product);
 
-        assertFalse(productDao.findProducts(null).contains(product));
+        assertFalse(productDao.findProducts(null, null, null).contains(product));
     }
 
     @Test
@@ -107,7 +108,7 @@ public class ArrayListProductDaoTest {
 
         productDao.save(product);
 
-        assertFalse(productDao.findProducts(null).contains(product));
+        assertFalse(productDao.findProducts(null, null, null).contains(product));
     }
 
     @Test(expected = ProductNotFoundException.class)
@@ -129,7 +130,7 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void testDeleteExistedProduct() throws ProductNotFoundException {
-        List<Product> productsBeforeDeleting = productDao.findProducts(null);
+        List<Product> productsBeforeDeleting = productDao.findProducts(null, null, null);
 
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
@@ -137,7 +138,7 @@ public class ArrayListProductDaoTest {
         productDao.save(product);
 
         productDao.delete(product.getId());
-        List<Product> productsAfterDeleting = productDao.findProducts(null);
+        List<Product> productsAfterDeleting = productDao.findProducts(null, null, null);
 
         assertTrue(productsBeforeDeleting.equals(productsAfterDeleting));
     }

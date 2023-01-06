@@ -3,6 +3,7 @@ package com.es.phoneshop.model.product;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ArrayListProductDao implements ProductDao {
     private long maxId;
@@ -27,21 +28,46 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findProducts(String query) {
-        List<Product> desiredProducts =
+    public synchronized List<Product> findProducts(String query, SortField sortField, SortOrder sortOrder) {
+        Stream<Product> unsortedDesiredProductsStream =
                 products.stream()
-                        .filter(product ->
-                                query == null || query.isEmpty()
+                        .filter(product -> (
+                                query == null || query.trim().isEmpty()
                                         || containsAnyQueryWords(product.getDescription().toLowerCase(), query))
+                        )
                         .filter(product -> product.getPrice() != null)
-                        .filter(product -> product.getStock() > 0)
-                        .collect(Collectors.toList());
+                        .filter(product -> product.getStock() > 0);
 
-        if (query != null) {
+        List<Product> desiredProducts;
+        if (query != null && !(query.trim().isEmpty()) && sortField == null) {
             String[] queryWords = query.toLowerCase().split("\\s+");
-            desiredProducts.sort((product1, product2) ->
-                    (int) (productSearchRelevance(product2.getDescription().toLowerCase(), queryWords)
-                            - productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)));
+            desiredProducts = unsortedDesiredProductsStream.sorted(
+                    (product1, product2) ->
+                        Double.compare(
+                                productSearchRelevance(product2.getDescription().toLowerCase(), queryWords),
+                                productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)
+                        )
+                    )
+                    .collect(Collectors.toList());
+        } else {
+            Comparator<Product> comparator = Comparator.comparing(product -> {
+                if (sortField.description == sortField) {
+                    return (Comparable) product.getDescription();
+                } else {
+                    return (Comparable) product.getPrice();
+                }
+            });
+
+            Stream<Product> sortedDesiredProductsStream;
+            if (sortOrder == SortOrder.asc) {
+                sortedDesiredProductsStream = unsortedDesiredProductsStream
+                        .sorted(comparator);
+            } else {
+                sortedDesiredProductsStream = unsortedDesiredProductsStream
+                        .sorted(comparator.reversed());
+            }
+
+            desiredProducts = sortedDesiredProductsStream.collect(Collectors.toList());
         }
 
         return desiredProducts;
@@ -52,11 +78,12 @@ public class ArrayListProductDao implements ProductDao {
                 .anyMatch(description::contains);
     }
 
-    public long productSearchRelevance(String description, String[] queryWords) {
+    public double productSearchRelevance(String description, String[] queryWords) {
         return Arrays.stream(queryWords)
                 .filter(description::contains)
                 .count()
-                / description.split("\\s+").length;
+                /
+                Double.valueOf(description.split(" ").length);
     }
 
     @Override
