@@ -1,9 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
@@ -25,15 +23,40 @@ public class ArrayListProductDao implements ProductDao {
         return products.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException());
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
-    public synchronized List<Product> findProducts() {
-        return products.stream()
-                .filter(product -> product.getPrice() != null)
-                .filter(product -> product.getStock() > 0)
-                .collect(Collectors.toList());
+    public synchronized List<Product> findProducts(String query) {
+        List<Product> desiredProducts =
+                products.stream()
+                        .filter(product ->
+                                query == null || query.isEmpty()
+                                        || containsAnyQueryWords(product.getDescription().toLowerCase(), query))
+                        .filter(product -> product.getPrice() != null)
+                        .filter(product -> product.getStock() > 0)
+                        .collect(Collectors.toList());
+
+        if (query != null) {
+            String[] queryWords = query.toLowerCase().split("\\s+");
+            desiredProducts.sort((product1, product2) ->
+                    (int) (productSearchRelevance(product2.getDescription().toLowerCase(), queryWords)
+                            - productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)));
+        }
+
+        return desiredProducts;
+    }
+
+    public boolean containsAnyQueryWords(String description, String query) {
+        return Arrays.stream(query.toLowerCase().split("\\s+"))
+                .anyMatch(description::contains);
+    }
+
+    public long productSearchRelevance(String description, String[] queryWords) {
+        return Arrays.stream(queryWords)
+                .filter(description::contains)
+                .count()
+                / description.split("\\s+").length;
     }
 
     @Override
