@@ -49,6 +49,11 @@ public class DemoDataServletContextListener implements ServletContextListener {
         sampleProducts.add(new Product("simc56", "Siemens C56", new BigDecimal(70), usd, 20, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C56.jpg"));
         sampleProducts.add(new Product("simc61", "Siemens C61", new BigDecimal(80), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C61.jpg"));
         sampleProducts.add(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg"));
+
+        Product productWithNewPrice = new Product("iphone6", "Apple iPhone 6", new BigDecimal(1100), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Apple/Apple%20iPhone%206.jpg");
+        productWithNewPrice.setId(5L);
+        sampleProducts.add(productWithNewPrice);
+
         return sampleProducts;
     }
 }

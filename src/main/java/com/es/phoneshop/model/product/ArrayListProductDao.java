@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.product;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -79,12 +80,12 @@ public class ArrayListProductDao implements ProductDao {
         return desiredProducts;
     }
 
-    public boolean containsAnyQueryWords(String description, String query) {
+    private boolean containsAnyQueryWords(String description, String query) {
         return Arrays.stream(query.toLowerCase().split("\\s+"))
                 .anyMatch(description::contains);
     }
 
-    public double productSearchRelevance(String description, String[] queryWords) {
+    private double productSearchRelevance(String description, String[] queryWords) {
         return Arrays.stream(queryWords)
                 .filter(description::contains)
                 .count()
@@ -96,6 +97,10 @@ public class ArrayListProductDao implements ProductDao {
     public synchronized void save(Product product) {
         try {
             Product productToUpdate = getProduct(product.getId());
+            product.setPriceHistoryList(productToUpdate.getPriceHistoryList());
+            product.getPriceHistoryList()
+                    .add(new PriceHistory(LocalDateTime.now(), product.getPrice(), product.getCurrency()));
+            product.setId(productToUpdate.getId());
             products.remove(productToUpdate);
         } catch (ProductNotFoundException e) {
             product.setId(maxId++);
