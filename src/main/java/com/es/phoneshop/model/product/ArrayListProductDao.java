@@ -46,38 +46,57 @@ public class ArrayListProductDao implements ProductDao {
                         .filter(product -> product.getStock() > 0);
 
         List<Product> desiredProducts;
-        if (query != null && !(query.trim().isEmpty()) && sortField == null) {
-            String[] queryWords = query.toLowerCase().split("\\s+");
-            desiredProducts = unsortedDesiredProductsStream.sorted(
-                    (product1, product2) ->
-                        Double.compare(
-                                productSearchRelevance(product2.getDescription().toLowerCase(), queryWords),
-                                productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)
-                        )
-                    )
-                    .collect(Collectors.toList());
-        } else {
-            Comparator<Product> comparator = Comparator.comparing(product -> {
-                if (sortField.description == sortField) {
-                    return (Comparable) product.getDescription();
-                } else {
-                    return (Comparable) product.getPrice();
-                }
-            });
-
-            Stream<Product> sortedDesiredProductsStream;
-            if (sortOrder == SortOrder.asc) {
-                sortedDesiredProductsStream = unsortedDesiredProductsStream
-                        .sorted(comparator);
+        if (sortField == null) {
+            if (query != null && !(query.trim().isEmpty())) {
+                desiredProducts = sortByRelevance(unsortedDesiredProductsStream, query);
             } else {
-                sortedDesiredProductsStream = unsortedDesiredProductsStream
-                        .sorted(comparator.reversed());
+                /* sorting by default */
+                desiredProducts = sortBySortOrderAndSortField(unsortedDesiredProductsStream,
+                        SortField.price, SortOrder.desc);
             }
-
-            desiredProducts = sortedDesiredProductsStream.collect(Collectors.toList());
+        } else {
+            desiredProducts = sortBySortOrderAndSortField(unsortedDesiredProductsStream, 
+                    sortField, sortOrder);
         }
 
         return desiredProducts;
+    }
+
+    private List<Product> sortByRelevance(Stream<Product> unsortedDesiredProductsStream, String query) {
+        String[] queryWords = query.toLowerCase().split("\\s+");
+        return unsortedDesiredProductsStream.sorted(
+                        (product1, product2) ->
+                                Double.compare(
+                                        productSearchRelevance(product2.getDescription().toLowerCase(), queryWords),
+                                        productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)
+                                )
+                )
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> sortBySortOrderAndSortField(Stream<Product> unsortedDesiredProductsStream,
+                                                      SortField sortField, SortOrder sortOrder) {
+        Comparator<Product> productComparator = Comparator.comparing(product -> {
+            switch (sortField) {
+                case description:
+                    return (Comparable) product.getDescription();
+                case price:
+                    return (Comparable) product.getPrice();
+            }
+            return null;
+        });
+
+        Comparator<Product> comparator = null;
+        switch (sortOrder) {
+            case asc:
+                comparator = productComparator;
+                break;
+            case desc:
+                comparator = productComparator.reversed();
+                break;
+        }
+
+        return unsortedDesiredProductsStream.sorted(comparator).collect(Collectors.toList());
     }
 
     private boolean containsAnyQueryWords(String description, String query) {
