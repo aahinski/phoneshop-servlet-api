@@ -4,7 +4,6 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
-import javax.servlet.HttpConstraintElement;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ProductHistoryListPageServlet extends HttpServlet {
+public class ProductPriceHistoryPageServlet extends HttpServlet {
     private ProductDao productDao;
 
     @Override

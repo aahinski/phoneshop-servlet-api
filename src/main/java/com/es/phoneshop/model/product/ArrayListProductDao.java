@@ -47,7 +47,7 @@ public class ArrayListProductDao implements ProductDao {
 
         List<Product> desiredProducts;
         if (sortField == null) {
-            if (query != null && !(query.trim().isEmpty())) {
+            if (query != null && !query.trim().isEmpty()) {
                 desiredProducts = sortByRelevance(unsortedDesiredProductsStream, query);
             } else {
                 /* sorting by default */
@@ -132,9 +132,5 @@ public class ArrayListProductDao implements ProductDao {
     public synchronized void delete(Long id) throws ProductNotFoundException {
         Product product = getProduct(id);
         products.remove(product);
-    }
-
-    public long getMaxId() {
-        return maxId;
     }
 }

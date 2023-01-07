@@ -20,12 +20,12 @@ public class DemoDataServletContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-         boolean insertDemoData = Boolean.valueOf(servletContextEvent.getServletContext().getInitParameter("insertDemoData"));
-         if (insertDemoData) {
-             getSampleProducts().stream().forEach(
-                     product -> productDao.save(product)
-             );
-         }
+        boolean insertDemoData = Boolean.parseBoolean(servletContextEvent.getServletContext().getInitParameter("insertDemoData"));
+        if (insertDemoData) {
+            getSampleProducts().forEach(
+                    product -> productDao.save(product)
+            );
+        }
     }
 
     @Override
@@ -33,6 +33,7 @@ public class DemoDataServletContextListener implements ServletContextListener {
 
     }
 
+    /* Last Product added to see product price history when doing manual testing */
     private List<Product> getSampleProducts() {
         List<Product> sampleProducts = new ArrayList<>();
         Currency usd = Currency.getInstance("USD");

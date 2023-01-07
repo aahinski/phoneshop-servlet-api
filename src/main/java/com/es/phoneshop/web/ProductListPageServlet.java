@@ -32,5 +32,4 @@ public class ProductListPageServlet extends HttpServlet {
                 Optional.ofNullable(sortOrder).map(SortOrder::valueOf).orElse(null)));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
-
 }

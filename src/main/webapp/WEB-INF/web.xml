@@ -36,7 +36,7 @@
 
   <servlet>
     <servlet-name>priceHistory</servlet-name>
-    <servlet-class>com.es.phoneshop.web.ProductHistoryListPageServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.ProductPriceHistoryPageServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
