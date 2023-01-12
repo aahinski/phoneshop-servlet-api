@@ -24,8 +24,7 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized Product getProduct(Long id) throws ProductNotFoundException {
-        if (id == null) {
-            throw new ProductNotFoundException(id);
+        if (id == null) {throw new ProductNotFoundException(null);
         }
 
         return products.stream()
@@ -45,37 +44,28 @@ public class ArrayListProductDao implements ProductDao {
                         .filter(product -> product.getPrice() != null)
                         .filter(product -> product.getStock() > 0);
 
-        List<Product> desiredProducts;
+        Comparator<Product> productComparator;
         if (sortField == null) {
             if (query != null && !query.trim().isEmpty()) {
-                desiredProducts = sortByRelevance(unsortedDesiredProductsStream, query);
+                productComparator = sortByRelevance(query);
             } else {
                 /* sorting by default */
-                desiredProducts = sortBySortOrderAndSortField(unsortedDesiredProductsStream,
-                        SortField.price, SortOrder.desc);
+                productComparator = sortBySortOrderAndSortField(SortField.price, SortOrder.desc);
             }
         } else {
-            desiredProducts = sortBySortOrderAndSortField(unsortedDesiredProductsStream, 
-                    sortField, sortOrder);
+            productComparator = sortBySortOrderAndSortField(sortField, sortOrder);
         }
 
-        return desiredProducts;
+        return unsortedDesiredProductsStream.sorted(productComparator).collect(Collectors.toList());
     }
 
-    private List<Product> sortByRelevance(Stream<Product> unsortedDesiredProductsStream, String query) {
+    private Comparator<Product> sortByRelevance(String query) {
         String[] queryWords = query.toLowerCase().split("\\s+");
-        return unsortedDesiredProductsStream.sorted(
-                        (product1, product2) ->
-                                Double.compare(
-                                        productSearchRelevance(product2.getDescription().toLowerCase(), queryWords),
-                                        productSearchRelevance(product1.getDescription().toLowerCase(), queryWords)
-                                )
-                )
-                .collect(Collectors.toList());
+        return Comparator.comparing(product ->
+                productSearchRelevance(product.getDescription().toLowerCase(), queryWords));
     }
 
-    private List<Product> sortBySortOrderAndSortField(Stream<Product> unsortedDesiredProductsStream,
-                                                      SortField sortField, SortOrder sortOrder) {
+    private Comparator<Product> sortBySortOrderAndSortField(SortField sortField, SortOrder sortOrder) {
         Comparator<Product> productComparator = Comparator.comparing(product -> {
             switch (sortField) {
                 case description:
@@ -96,7 +86,7 @@ public class ArrayListProductDao implements ProductDao {
                 break;
         }
 
-        return unsortedDesiredProductsStream.sorted(comparator).collect(Collectors.toList());
+        return comparator;
     }
 
     private boolean containsAnyQueryWords(String description, String query) {
@@ -117,9 +107,13 @@ public class ArrayListProductDao implements ProductDao {
         try {
             Product productToUpdate = getProduct(product.getId());
             product.setPriceHistoryList(productToUpdate.getPriceHistoryList());
-            product.getPriceHistoryList()
-                    .add(new PriceHistory(LocalDateTime.now(), product.getPrice(), product.getCurrency()));
-            product.setId(productToUpdate.getId());
+            if(product.getPriceHistoryList()
+                    .stream()
+                    .noneMatch(p -> Objects.equals(p.getPrice(), product.getPrice())))
+            {
+                product.getPriceHistoryList()
+                        .add(new PriceHistory(LocalDateTime.now(), product.getPrice(), product.getCurrency()));
+            }
             products.remove(productToUpdate);
         } catch (ProductNotFoundException e) {
             product.setId(maxId++);
