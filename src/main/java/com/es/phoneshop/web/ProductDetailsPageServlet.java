@@ -1,5 +1,6 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
@@ -12,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
@@ -29,7 +33,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String productId = request.getPathInfo().substring(1);
         request.setAttribute("product", productDao.getProduct(Long.valueOf(productId)));
-        request.setAttribute("cart", cartService.getCart());
+        request.setAttribute("cart", cartService.getCart(request));
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
      }
 
@@ -39,10 +43,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
         String quantityString = request.getParameter("quantity");
 
         int quantity;
-
         try {
-            quantity = Integer.parseInt(quantityString);
-        } catch (NumberFormatException e) {
+            Locale locale = request.getLocale();
+            NumberFormat format = NumberFormat.getInstance(locale);
+            Double doubleQuantity = format.parse(quantityString).doubleValue();
+            quantity = doubleQuantity.intValue();
+            if(quantity - doubleQuantity != 0.0) {
+                request.setAttribute("error", "Number should be integer");
+                doGet(request, response);
+                return;
+            }
+        } catch (ParseException e) {
             request.setAttribute("error", "Not a number");
             doGet(request, response);
             return;
@@ -54,8 +65,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
             return;
         }
 
+        Cart cart = cartService.getCart(request);
         try {
-            cartService.add(productId, quantity);
+            cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
             request.setAttribute("error", "Out of stock, available " + e.getStock());
             doGet(request, response);
