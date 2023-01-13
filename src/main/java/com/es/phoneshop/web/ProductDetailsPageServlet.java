@@ -6,6 +6,9 @@ import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.recently_viewed_products.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProducts;
+import com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -22,20 +25,29 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private CartService cartService;
 
+    private RecentlyViewedProductsService recentlyViewedProductsService;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
         cartService = DefaultCartService.getInstance();
+        recentlyViewedProductsService = DefaultRecentlyViewedProductsService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String productId = request.getPathInfo().substring(1);
-        request.setAttribute("product", productDao.getProduct(Long.valueOf(productId)));
+        String productIdString = request.getPathInfo().substring(1);
+        Long productId = Long.valueOf(productIdString);
+        request.setAttribute("product", productDao.getProduct(productId));
         request.setAttribute("cart", cartService.getCart(request));
+
+        RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getProducts(request);
+        recentlyViewedProductsService.add(recentlyViewedProducts.getProducts(), productId);
+        request.setAttribute("recently_viewed", recentlyViewedProducts);
+
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
-     }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

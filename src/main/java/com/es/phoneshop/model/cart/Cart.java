@@ -6,10 +6,6 @@ import java.util.List;
 public class Cart {
     private List<CartItem> items;
 
-    public Cart(List<CartItem> items) {
-        this.items = items;
-    }
-
     public Cart() {
         items = new ArrayList<>();
     }

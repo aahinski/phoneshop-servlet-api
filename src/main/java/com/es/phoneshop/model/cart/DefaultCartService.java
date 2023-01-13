@@ -8,13 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 public class DefaultCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
-
     private ProductDao productDao;
-
     private DefaultCartService() {
         productDao = ArrayListProductDao.getInstance();
     }
-
     private static CartService instance;
 
     public static synchronized CartService getInstance() {
@@ -23,6 +20,7 @@ public class DefaultCartService implements CartService {
         }
         return instance;
     }
+
     @Override
     public synchronized Cart getCart(HttpServletRequest request) {
         Cart cart = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);

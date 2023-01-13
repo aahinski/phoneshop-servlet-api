@@ -5,9 +5,7 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product Details">
-    <p>
-        Cart: ${cart}
-    </p>
+    <tags:cart cart="${cart}"/>
     <c:if test="${not empty param.message}">
         <div class="success">
             ${param.message}
@@ -61,4 +59,5 @@
       </table>
         <button>Add to cart</button>
       </form>
+    <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
 </tags:master>
