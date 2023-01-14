@@ -61,8 +61,9 @@ public class ArrayListProductDao implements ProductDao {
 
     private Comparator<Product> sortByRelevance(String query) {
         String[] queryWords = query.toLowerCase().split("\\s+");
-        return Comparator.comparing(product ->
-                productSearchRelevance(product.getDescription().toLowerCase(), queryWords));
+        Comparator<Product> comparator = Comparator.comparing(product ->
+              productSearchRelevance(product.getDescription().toLowerCase(), queryWords));
+        return comparator.reversed();
     }
 
     private Comparator<Product> sortBySortOrderAndSortField(SortField sortField, SortOrder sortOrder) {
