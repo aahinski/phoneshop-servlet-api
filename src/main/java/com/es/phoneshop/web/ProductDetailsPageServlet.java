@@ -61,19 +61,16 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Double doubleQuantity = format.parse(quantityString).doubleValue();
             quantity = doubleQuantity.intValue();
             if(quantity - doubleQuantity != 0.0) {
-                request.setAttribute("error", "Number should be integer");
-                doGet(request, response);
+                incorrectQuantityError(request, response, "Number should be integer");
                 return;
             }
         } catch (ParseException e) {
-            request.setAttribute("error", "Not a number");
-            doGet(request, response);
+            incorrectQuantityError(request, response, "Not a number");
             return;
         }
 
         if (quantity <= 0) {
-            request.setAttribute("error", "Number should be greater than zero");
-            doGet(request, response);
+            incorrectQuantityError(request, response, "Number should be greater than zero");
             return;
         }
 
@@ -81,13 +78,18 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
-            request.setAttribute("error", "Out of stock, available " + e.getStock());
-            doGet(request, response);
+            incorrectQuantityError(request, response, "Out of stock, available " + e.getStock());
             return;
         }
 
         request.setAttribute("message", "Product added to cart");
         response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
+    }
+
+    private void incorrectQuantityError(HttpServletRequest request, HttpServletResponse response,
+                                        String errorMessage) throws ServletException, IOException {
+        request.setAttribute("error", errorMessage);
+        doGet(request, response);
     }
 
     private Long parseProductId(HttpServletRequest request) {
