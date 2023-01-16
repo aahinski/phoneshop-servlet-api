@@ -5,47 +5,54 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-public class DefaultCartService implements CartService {
-    private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
+public class HttpSessionCartService implements CartService {
+    private static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class.getName() + ".cart";
     private ProductDao productDao;
-    private DefaultCartService() {
+    private HttpSessionCartService() {
         productDao = ArrayListProductDao.getInstance();
     }
     private static CartService instance;
 
     public static synchronized CartService getInstance() {
-        if(instance == null) {
-            instance = new DefaultCartService();
+        if (instance == null) {
+            instance = new HttpSessionCartService();
         }
         return instance;
     }
 
     @Override
-    public synchronized Cart getCart(HttpServletRequest request) {
-        Cart cart = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
+    public Cart getCart(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        synchronized (session) {
+            Cart cart = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
 
-        if (cart == null) {
-            cart = new Cart();
-            request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, cart);
+            if (cart == null) {
+                cart = new Cart();
+                request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, cart);
+            }
+
+            return cart;
         }
-
-        return cart;
     }
 
     @Override
-    public synchronized void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
+    public void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
         Product product = productDao.getProduct(productId);
-        CartItem cartItem = cart.getItems()
-                .stream()
-                .filter(item -> item.getProduct().equals(product))
-                .findAny()
-                .orElse(null);
 
-        if (cartItem != null) {
-            addExistedInCartProduct(product, cartItem, quantity);
-        } else {
-            addNonExistedInCartProduct(cart, product, quantity);
+        synchronized (cart) {
+            CartItem cartItem = cart.getItems()
+                    .stream()
+                    .filter(item -> item.getProduct().equals(product))
+                    .findAny()
+                    .orElse(null);
+
+            if (cartItem != null) {
+                addExistedInCartProduct(product, cartItem, quantity);
+            } else {
+                addNonExistedInCartProduct(cart, product, quantity);
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.recently_viewed_products;
+package com.es.phoneshop.model.RecentlyViewedProducts;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;

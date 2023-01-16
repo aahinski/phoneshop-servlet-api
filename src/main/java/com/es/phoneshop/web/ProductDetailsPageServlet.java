@@ -2,13 +2,13 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.DefaultCartService;
+import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.recently_viewed_products.DefaultRecentlyViewedProductsService;
-import com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProducts;
-import com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProductsService;
+import com.es.phoneshop.model.RecentlyViewedProducts.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProducts;
+import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -31,7 +31,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
-        cartService = DefaultCartService.getInstance();
+        cartService = HttpSessionCartService.getInstance();
         recentlyViewedProductsService = DefaultRecentlyViewedProductsService.getInstance();
     }
 
@@ -60,7 +60,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             NumberFormat format = NumberFormat.getInstance(locale);
             Double doubleQuantity = format.parse(quantityString).doubleValue();
             quantity = doubleQuantity.intValue();
-            if(quantity - doubleQuantity != 0.0) {
+            if (quantity - doubleQuantity != 0.0) {
                 incorrectQuantityError(request, response, "Number should be integer");
                 return;
             }

@@ -11,7 +11,7 @@ import java.util.Currency;
 
 import static org.junit.Assert.assertEquals;
 
-public class DefaultCartServiceTest {
+public class HttpSessionCartServiceTest {
     private ProductDao productDao;
     private CartService cartService;
     private Cart cart;
@@ -24,7 +24,7 @@ public class DefaultCartServiceTest {
         productDao.save(product);
         cart = new Cart();
 
-        this.cartService = DefaultCartService.getInstance();
+        this.cartService = HttpSessionCartService.getInstance();
     }
 
     @Test

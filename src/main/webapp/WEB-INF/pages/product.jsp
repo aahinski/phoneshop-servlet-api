@@ -5,18 +5,13 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
-<jsp:useBean id="recently_viewed" type="com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProducts"
+<jsp:useBean id="recently_viewed" type="com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProducts"
              scope="request"/>
 
 <tags:master pageTitle="Product Details">
-    <c:if test="${cart.items.size() > 0}">
-        <div>
-            <h3>
-                Cart
-            </h3>
-            <tags:cart cart="${cart}"/>
-        </div>
-    </c:if>
+    <div>
+        <tags:cart cart="${cart}"/>
+    </div>
 
     <c:if test="${not empty param.message}">
         <div class="success">
@@ -73,12 +68,7 @@
         <button>Add to cart</button>
     </form>
 
-    <c:if test="${recently_viewed.products.size() > 0}">
-        <div>
-            <h3>
-                Recently viewed products
-            </h3>
-            <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
-        </div>
-    </c:if>
+    <div>
+        <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
+    </div>
 </tags:master>

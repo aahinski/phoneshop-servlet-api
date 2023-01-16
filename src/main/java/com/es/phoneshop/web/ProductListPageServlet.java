@@ -1,13 +1,13 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.DefaultCartService;
+import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.SortField;
 import com.es.phoneshop.model.product.SortOrder;
-import com.es.phoneshop.model.recently_viewed_products.DefaultRecentlyViewedProductsService;
-import com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProductsService;
+import com.es.phoneshop.model.RecentlyViewedProducts.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -29,7 +29,7 @@ public class ProductListPageServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
-        cartService = DefaultCartService.getInstance();
+        cartService = HttpSessionCartService.getInstance();
         recentlyViewedProductsService = DefaultRecentlyViewedProductsService.getInstance();
     }
 

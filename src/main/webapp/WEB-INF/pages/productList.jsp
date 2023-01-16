@@ -6,7 +6,7 @@
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
-<jsp:useBean id="recently_viewed" type="com.es.phoneshop.model.recently_viewed_products.RecentlyViewedProducts"
+<jsp:useBean id="recently_viewed" type="com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProducts"
              scope="request"/>
 
 <tags:master pageTitle="Product List">
@@ -14,14 +14,9 @@
         Welcome to Expert-Soft training!
     </h2>
 
-    <c:if test="${cart.items.size() > 0}">
-        <div>
-            <h3>
-                Cart
-            </h3>
-            <tags:cart cart="${cart}"/>
-        </div>
-    </c:if>
+    <div>
+        <tags:cart cart="${cart}"/>
+    </div>
 
     <h1>
         Products
@@ -71,12 +66,7 @@
         </c:forEach>
     </table>
 
-    <c:if test="${recently_viewed.products.size() > 0}">
-        <div>
-            <h3>
-                Recently viewed products
-            </h3>
-            <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
-        </div>
-    </c:if>
+    <div>
+        <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
+    </div>
 </tags:master>
