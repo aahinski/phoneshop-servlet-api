@@ -6,9 +6,9 @@ import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.RecentlyViewedProducts.DefaultRecentlyViewedProductsService;
-import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProducts;
-import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProductsService;
+import com.es.phoneshop.model.recentlyViewedProducts.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProducts;
+import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

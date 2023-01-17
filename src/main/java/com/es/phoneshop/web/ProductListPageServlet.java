@@ -6,8 +6,8 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.SortField;
 import com.es.phoneshop.model.product.SortOrder;
-import com.es.phoneshop.model.RecentlyViewedProducts.DefaultRecentlyViewedProductsService;
-import com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProductsService;
+import com.es.phoneshop.model.recentlyViewedProducts.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

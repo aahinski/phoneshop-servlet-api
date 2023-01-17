@@ -1,7 +1,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
-<%@ attribute name="recently_viewed" type="com.es.phoneshop.model.RecentlyViewedProducts.RecentlyViewedProducts"
+<%@ attribute name="recently_viewed" type="com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProducts"
               required="true" %>
 
 <c:if test="${recently_viewed.products.size() > 0}">

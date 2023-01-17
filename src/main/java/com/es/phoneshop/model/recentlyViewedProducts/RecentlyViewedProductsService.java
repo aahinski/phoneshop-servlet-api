@@ -1,4 +1,4 @@
-package com.es.phoneshop.model.RecentlyViewedProducts;
+package com.es.phoneshop.model.recentlyViewedProducts;
 
 import com.es.phoneshop.model.product.Product;
 
@@ -7,5 +7,6 @@ import java.util.Deque;
 
 public interface RecentlyViewedProductsService {
     RecentlyViewedProducts getProducts(HttpServletRequest request);
+
     void add(Deque<Product> products, Long productId);
 }
