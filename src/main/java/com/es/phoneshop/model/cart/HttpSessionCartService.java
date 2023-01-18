@@ -10,9 +10,11 @@ import javax.servlet.http.HttpSession;
 public class HttpSessionCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class.getName() + ".cart";
     private ProductDao productDao;
+
     private HttpSessionCartService() {
         productDao = ArrayListProductDao.getInstance();
     }
+
     private static CartService instance;
 
     public static synchronized CartService getInstance() {
@@ -38,10 +40,12 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
-        Product product = productDao.getProduct(productId);
+    public void add(Cart cart, Long productId, int quantity, HttpServletRequest request) throws OutOfStockException {
+        HttpSession session = request.getSession();
 
-        synchronized (cart) {
+        synchronized (session) {
+            Product product = productDao.getProduct(productId);
+
             CartItem cartItem = cart.getItems()
                     .stream()
                     .filter(item -> item.getProduct().equals(product))

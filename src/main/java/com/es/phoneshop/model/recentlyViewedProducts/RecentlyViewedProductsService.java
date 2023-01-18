@@ -8,5 +8,5 @@ import java.util.Deque;
 public interface RecentlyViewedProductsService {
     RecentlyViewedProducts getProducts(HttpServletRequest request);
 
-    void add(Deque<Product> products, Long productId);
+    void add(Deque<Product> products, Long productId, HttpServletRequest request);
 }

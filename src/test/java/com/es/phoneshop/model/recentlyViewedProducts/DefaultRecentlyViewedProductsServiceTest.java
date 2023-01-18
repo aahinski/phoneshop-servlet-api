@@ -5,14 +5,27 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Deque;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultRecentlyViewedProductsServiceTest {
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpSession session;
+
     private ProductDao productDao;
     private RecentlyViewedProductsService recentlyViewedProductsService;
     private RecentlyViewedProducts recentlyViewedProducts;
@@ -31,15 +44,17 @@ public class DefaultRecentlyViewedProductsServiceTest {
         Product product4 = new Product("test4", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product4);
 
+        when(request.getSession()).thenReturn(session);
+
         recentlyViewedProducts = new RecentlyViewedProducts();
 
         this.recentlyViewedProductsService = DefaultRecentlyViewedProductsService.getInstance();
 
         Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
 
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L);
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 2L);
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 3L);
+        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L, request);
+        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 2L, request);
+        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 3L, request);
     }
 
     @Test
@@ -47,7 +62,7 @@ public class DefaultRecentlyViewedProductsServiceTest {
         Product product = productDao.getProduct(1L);
 
         Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L);
+        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L, request);
 
         assertEquals(product, recentlyViewedProductsDeque.peek());
     }
@@ -57,7 +72,7 @@ public class DefaultRecentlyViewedProductsServiceTest {
         Product fourthProduct = productDao.getProduct(4L);
 
         Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 4L);
+        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 4L, request);
 
         assertEquals(fourthProduct, recentlyViewedProductsDeque.peek());
         assertEquals(3, recentlyViewedProductsDeque.size());

@@ -43,7 +43,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         request.setAttribute("cart", cartService.getCart(request));
 
         RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getProducts(request);
-        recentlyViewedProductsService.add(recentlyViewedProducts.getProducts(), productId);
+        recentlyViewedProductsService.add(recentlyViewedProducts.getProducts(), productId, request);
         request.setAttribute("recently_viewed", recentlyViewedProducts);
 
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
@@ -76,7 +76,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         Cart cart = cartService.getCart(request);
         try {
-            cartService.add(cart, productId, quantity);
+            cartService.add(cart, productId, quantity, request);
         } catch (OutOfStockException e) {
             incorrectQuantityError(request, response, "Out of stock, available " + e.getStock());
             return;

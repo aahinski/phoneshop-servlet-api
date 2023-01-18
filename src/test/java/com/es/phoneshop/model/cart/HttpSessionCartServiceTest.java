@@ -5,13 +5,26 @@ import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.Currency;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class HttpSessionCartServiceTest {
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpSession session;
+
     private ProductDao productDao;
     private CartService cartService;
     private Cart cart;
@@ -24,6 +37,8 @@ public class HttpSessionCartServiceTest {
         productDao.save(product);
         cart = new Cart();
 
+        when(request.getSession()).thenReturn(session);
+
         this.cartService = HttpSessionCartService.getInstance();
     }
 
@@ -32,7 +47,7 @@ public class HttpSessionCartServiceTest {
         Product product = productDao.getProduct(1L);
         CartItem expectedCartItem = new CartItem(product, 1);
 
-        cartService.add(cart, product.getId(), 1);
+        cartService.add(cart, product.getId(), 1, request);
 
         assertEquals(expectedCartItem, cart.getItems().get(0));
     }
@@ -41,8 +56,8 @@ public class HttpSessionCartServiceTest {
     public void testAddExistedProduct() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(cart, product.getId(), 1);
-        cartService.add(cart, product.getId(), 2);
+        cartService.add(cart, product.getId(), 1, request);
+        cartService.add(cart, product.getId(), 2, request);
 
         CartItem expectedCartItem = new CartItem(product, 3);
 
@@ -53,6 +68,6 @@ public class HttpSessionCartServiceTest {
     public void testAddProductWithQuantityGreaterThanStock() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(cart, product.getId(), product.getStock() + 1);
+        cartService.add(cart, product.getId(), product.getStock() + 1, request);
     }
 }

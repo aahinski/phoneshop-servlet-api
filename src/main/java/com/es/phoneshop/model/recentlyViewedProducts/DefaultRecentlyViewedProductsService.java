@@ -49,16 +49,16 @@ public class DefaultRecentlyViewedProductsService implements RecentlyViewedProdu
     }
 
     @Override
-    public void add(Deque<Product> products, Long productId) {
-        Product product = productDao.getProduct(productId);
+    public void add(Deque<Product> products, Long productId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
 
-        synchronized (products) {
+        synchronized (session) {
+            Product product = productDao.getProduct(productId);
+
             products.remove(product);
-
             if (products.size() == RECENTLY_VIEWED_PRODUCTS_QUANTITY) {
                 products.pollLast();
             }
-
             products.push(product);
         }
     }
