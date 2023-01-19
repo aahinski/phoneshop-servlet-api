@@ -39,10 +39,12 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String productIdString = request.getPathInfo().substring(1);
         Long productId = Long.valueOf(productIdString);
+        request.setAttribute("product", productDao.getProduct(productId));
+        request.setAttribute("cart", cartService.getCart(request));
 
-        setAttributes(request, productId);
-
-        recentlyViewedProductsService.add(productId, request);
+        RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getProducts(request);
+        recentlyViewedProductsService.add(recentlyViewedProducts.getProducts(), productId, request);
+        request.setAttribute("recently_viewed", recentlyViewedProducts);
 
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
     }
@@ -50,9 +52,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long productId = parseProductId(request);
-
-        setAttributes(request, productId);
-
         String quantityString = request.getParameter("quantity");
 
         int quantity;
@@ -75,8 +74,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
             return;
         }
 
+        Cart cart = cartService.getCart(request);
         try {
-            cartService.add(productId, quantity, request);
+            cartService.add(cart, productId, quantity, request);
         } catch (OutOfStockException e) {
             incorrectQuantityError(request, response, "Out of stock, available " + e.getStock());
             return;
@@ -84,13 +84,6 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         request.setAttribute("message", "Product added to cart");
         response.sendRedirect(request.getContextPath() + "/products/" + productId + "?message=Product added to cart");
-    }
-
-    private void setAttributes(HttpServletRequest request, Long productId) {
-        request.setAttribute("product", productDao.getProduct(productId));
-        request.setAttribute("cart", cartService.getCart(request));
-        RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getProducts(request);
-        request.setAttribute("recently_viewed", recentlyViewedProducts);
     }
 
     private void incorrectQuantityError(HttpServletRequest request, HttpServletResponse response,

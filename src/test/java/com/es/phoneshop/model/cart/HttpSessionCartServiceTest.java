@@ -35,10 +35,7 @@ public class HttpSessionCartServiceTest {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
-
         cart = new Cart();
-        request.setAttribute("cart", cart);
-        when(request.getAttribute("cart")).thenReturn(cart);
 
         when(request.getSession()).thenReturn(session);
 
@@ -50,7 +47,7 @@ public class HttpSessionCartServiceTest {
         Product product = productDao.getProduct(1L);
         CartItem expectedCartItem = new CartItem(product, 1);
 
-        cartService.add(product.getId(), 1, request);
+        cartService.add(cart, product.getId(), 1, request);
 
         assertEquals(expectedCartItem, cart.getItems().get(0));
     }
@@ -59,8 +56,8 @@ public class HttpSessionCartServiceTest {
     public void testAddExistedProduct() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(product.getId(), 1, request);
-        cartService.add(product.getId(), 2, request);
+        cartService.add(cart, product.getId(), 1, request);
+        cartService.add(cart, product.getId(), 2, request);
 
         CartItem expectedCartItem = new CartItem(product, 3);
 
@@ -71,6 +68,6 @@ public class HttpSessionCartServiceTest {
     public void testAddProductWithQuantityGreaterThanStock() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(product.getId(), product.getStock() + 1, request);
+        cartService.add(cart, product.getId(), product.getStock() + 1, request);
     }
 }
