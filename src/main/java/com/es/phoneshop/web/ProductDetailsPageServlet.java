@@ -1,6 +1,5 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
@@ -43,7 +42,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         request.setAttribute("cart", cartService.getCart(request));
 
         RecentlyViewedProducts recentlyViewedProducts = recentlyViewedProductsService.getProducts(request);
-        recentlyViewedProductsService.add(recentlyViewedProducts.getProducts(), productId, request);
+        recentlyViewedProductsService.add(productId, request);
         request.setAttribute("recently_viewed", recentlyViewedProducts);
 
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
@@ -74,9 +73,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
             return;
         }
 
-        Cart cart = cartService.getCart(request);
         try {
-            cartService.add(cart, productId, quantity, request);
+            cartService.add(productId, quantity, request);
         } catch (OutOfStockException e) {
             incorrectQuantityError(request, response, "Out of stock, available " + e.getStock());
             return;

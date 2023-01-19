@@ -40,11 +40,12 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void add(Cart cart, Long productId, int quantity, HttpServletRequest request) throws OutOfStockException {
+    public void add(Long productId, int quantity, HttpServletRequest request) throws OutOfStockException {
         HttpSession session = request.getSession();
 
         synchronized (session) {
             Product product = productDao.getProduct(productId);
+            Cart cart = getCart(request);
 
             CartItem cartItem = cart.getItems()
                     .stream()

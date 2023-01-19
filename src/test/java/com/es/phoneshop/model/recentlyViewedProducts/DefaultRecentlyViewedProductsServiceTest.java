@@ -28,7 +28,6 @@ public class DefaultRecentlyViewedProductsServiceTest {
 
     private ProductDao productDao;
     private RecentlyViewedProductsService recentlyViewedProductsService;
-    private RecentlyViewedProducts recentlyViewedProducts;
 
     @Before
     public void setup() {
@@ -45,24 +44,21 @@ public class DefaultRecentlyViewedProductsServiceTest {
         productDao.save(product4);
 
         when(request.getSession()).thenReturn(session);
-
-        recentlyViewedProducts = new RecentlyViewedProducts();
+        when(session.getAttribute(DefaultRecentlyViewedProductsService.class.getName() + ".recently_viewed_products")).thenReturn(new RecentlyViewedProducts());
 
         this.recentlyViewedProductsService = DefaultRecentlyViewedProductsService.getInstance();
 
-        Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
-
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L, request);
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 2L, request);
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 3L, request);
+        recentlyViewedProductsService.add(1L, request);
+        recentlyViewedProductsService.add(2L, request);
+        recentlyViewedProductsService.add(3L, request);
     }
 
     @Test
     public void testAddExistedProduct() {
         Product product = productDao.getProduct(1L);
 
-        Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 1L, request);
+        Deque<Product> recentlyViewedProductsDeque = recentlyViewedProductsService.getProducts(request).getProducts();
+        recentlyViewedProductsService.add(1L, request);
 
         assertEquals(product, recentlyViewedProductsDeque.peek());
     }
@@ -71,8 +67,8 @@ public class DefaultRecentlyViewedProductsServiceTest {
     public void testAddFourthProduct() {
         Product fourthProduct = productDao.getProduct(4L);
 
-        Deque<Product> recentlyViewedProductsDeque = recentlyViewedProducts.getProducts();
-        recentlyViewedProductsService.add(recentlyViewedProductsDeque, 4L, request);
+        Deque<Product> recentlyViewedProductsDeque = recentlyViewedProductsService.getProducts(request).getProducts();
+        recentlyViewedProductsService.add(4L, request);
 
         assertEquals(fourthProduct, recentlyViewedProductsDeque.peek());
         assertEquals(3, recentlyViewedProductsDeque.size());

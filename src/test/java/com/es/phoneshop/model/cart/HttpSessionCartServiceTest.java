@@ -27,19 +27,18 @@ public class HttpSessionCartServiceTest {
 
     private ProductDao productDao;
     private CartService cartService;
-    private Cart cart;
 
     @Before
     public void setup() {
+        this.cartService = HttpSessionCartService.getInstance();
+
         this.productDao = ArrayListProductDao.getInstance();
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
-        cart = new Cart();
 
         when(request.getSession()).thenReturn(session);
-
-        this.cartService = HttpSessionCartService.getInstance();
+        when(session.getAttribute(HttpSessionCartService.class.getName() + ".cart")).thenReturn(new Cart());
     }
 
     @Test
@@ -47,27 +46,27 @@ public class HttpSessionCartServiceTest {
         Product product = productDao.getProduct(1L);
         CartItem expectedCartItem = new CartItem(product, 1);
 
-        cartService.add(cart, product.getId(), 1, request);
+        cartService.add(product.getId(), 1, request);
 
-        assertEquals(expectedCartItem, cart.getItems().get(0));
+        assertEquals(expectedCartItem, cartService.getCart(request).getItems().get(0));
     }
 
     @Test
     public void testAddExistedProduct() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(cart, product.getId(), 1, request);
-        cartService.add(cart, product.getId(), 2, request);
+        cartService.add(product.getId(), 1, request);
+        cartService.add(product.getId(), 2, request);
 
         CartItem expectedCartItem = new CartItem(product, 3);
 
-        assertEquals(expectedCartItem, cart.getItems().get(0));
+        assertEquals(expectedCartItem, cartService.getCart(request).getItems().get(0));
     }
 
     @Test(expected = OutOfStockException.class)
     public void testAddProductWithQuantityGreaterThanStock() throws OutOfStockException {
         Product product = productDao.getProduct(1L);
 
-        cartService.add(cart, product.getId(), product.getStock() + 1, request);
+        cartService.add(product.getId(), product.getStock() + 1, request);
     }
 }
