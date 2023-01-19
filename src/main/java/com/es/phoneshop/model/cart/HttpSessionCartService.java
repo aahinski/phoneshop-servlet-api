@@ -3,6 +3,7 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -57,6 +58,29 @@ public class HttpSessionCartService implements CartService {
                 addExistedInCartProduct(product, cartItem, quantity);
             } else {
                 addNonExistedInCartProduct(cart, product, quantity);
+            }
+        }
+    }
+
+    @Override
+    public void update(Long productId, int quantity, HttpServletRequest request) throws OutOfStockException {
+        HttpSession session = request.getSession();
+
+        synchronized (session) {
+            Product product = productDao.getProduct(productId);
+            Cart cart = getCart(request);
+
+            CartItem cartItem = cart.getItems()
+                    .stream()
+                    .filter(item -> item.getProduct().equals(product))
+                    .findAny()
+                    .orElse(null);
+
+            if (cartItem != null) {
+                checkIfQuantityGreaterThanStock(product, quantity);
+                cartItem.setQuantity(quantity);
+            } else {
+                throw new ProductNotFoundException(productId);
             }
         }
     }
