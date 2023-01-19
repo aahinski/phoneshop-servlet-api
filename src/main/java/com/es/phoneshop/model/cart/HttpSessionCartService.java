@@ -7,6 +7,8 @@ import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 public class HttpSessionCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class.getName() + ".cart";
@@ -59,6 +61,8 @@ public class HttpSessionCartService implements CartService {
             } else {
                 addNonExistedInCartProduct(cart, product, quantity);
             }
+
+            recalculateCart(cart);
         }
     }
 
@@ -82,6 +86,19 @@ public class HttpSessionCartService implements CartService {
             } else {
                 throw new ProductNotFoundException(productId);
             }
+
+            recalculateCart(cart);
+        }
+    }
+
+    @Override
+    public void delete(Long productId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        synchronized (session) {
+            Cart cart = getCart(request);
+            cart.getItems().removeIf(item -> Objects.equals(item.getProduct().getId(), productId));
+            recalculateCart(cart);
         }
     }
 
@@ -100,5 +117,14 @@ public class HttpSessionCartService implements CartService {
         if (product.getStock() < quantity) {
             throw new OutOfStockException(product, quantity, product.getStock());
         }
+    }
+
+    private void recalculateCart(Cart cart) {
+        cart.setTotalQuantity(cart.getItems().stream()
+                .map(CartItem::getQuantity)
+                .mapToInt(q -> q).sum());
+        cart.setTotalCost(cart.getItems().stream()
+                .map(item -> item.getProduct().getPrice())
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 }

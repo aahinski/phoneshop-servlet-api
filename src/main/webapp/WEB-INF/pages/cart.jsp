@@ -37,6 +37,7 @@
                     <td>
                         Quantity
                     </td>
+                    <td></td>
                 </tr>
                 </thead>
                 <c:forEach var="cartItem" items="${cart.items}" varStatus="cartItemIndex">
@@ -71,12 +72,21 @@
                             </c:if>
                             <input type="hidden" name="productId" value="${cartItem.product.id}"/>
                         </td>
+                        <td>
+                            <button id="deleteCartItem"
+                                    formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem/${cartItem.product.id}">Delete</button>
+                        </td>
                     </tr>
                 </c:forEach>
+                <tr>
+                    <td>Total cost</td>
+                    <td>${cart.totalCost}</td>
+                </tr>
             </table>
             <p>
                 <button>Update</button>
             </p>
         </form>
+        <form id="deleteCartItem" method="post"></form>
     </div>
 </tags:master>
