@@ -6,6 +6,7 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.SortField;
 import com.es.phoneshop.model.product.SortOrder;
+
 import com.es.phoneshop.model.recentlyViewedProducts.DefaultRecentlyViewedProductsService;
 import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProductsService;
 
@@ -44,7 +45,7 @@ public class ProductListPageServlet extends HttpServlet {
 
         request.setAttribute("cart", cartService.getCart(request));
         request.setAttribute("recently_viewed", recentlyViewedProductsService.getProducts(request));
-
+        
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 }

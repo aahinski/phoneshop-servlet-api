@@ -8,6 +8,7 @@ import com.es.phoneshop.model.product.SortField;
 import com.es.phoneshop.model.product.SortOrder;
 import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProducts;
 import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProductsService;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,8 +60,10 @@ public class ProductListPageServletTest {
         when(request.getParameter("query")).thenReturn("samsung galaxy");
         when(request.getParameter("sort")).thenReturn("price");
         when(request.getParameter("order")).thenReturn("asc");
+
         when(cartService.getCart(request)).thenReturn(new Cart());
         when(recentlyViewedProductsService.getProducts(request)).thenReturn(new RecentlyViewedProducts());
+
         when(productDao.findProducts("samsung galaxy", SortField.price, SortOrder.asc)).thenReturn(products);
     }
 

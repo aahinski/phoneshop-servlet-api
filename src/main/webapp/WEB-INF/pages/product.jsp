@@ -72,3 +72,34 @@
         <tags:recentlyViewedProducts recently_viewed="${recently_viewed}"/>
     </div>
 </tags:master>
+<tags:master pageTitle="Product Details">
+  <p>
+    ${product.description}
+  </p>
+  <table>
+      <tr>
+        <td>Image</td>
+        <td>
+          <img src="${product.imageUrl}">
+        </td>
+      </tr>
+    <tr>
+        <td>Price</td>
+        <td>
+          <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Code</td>
+        <td>
+          ${product.code}
+        </td>
+    </tr>
+    <tr>
+        <td>Stock</td>
+        <td>
+          ${product.stock}
+        </td>
+    </tr>
+  </table>
+</tags:master>
