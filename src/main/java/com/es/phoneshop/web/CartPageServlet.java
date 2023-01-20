@@ -76,6 +76,7 @@ public class CartPageServlet extends HttpServlet {
         }
 
         if (errors.isEmpty()) {
+            request.setAttribute("message", "Product added to card");
             response.sendRedirect(request.getContextPath() + "/cart?message=Cart is updated");
         } else {
             request.setAttribute("errors", errors);

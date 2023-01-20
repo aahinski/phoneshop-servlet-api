@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class MiniCartServlet extends HttpServlet {
+    private static final long serialVersionUID = 6298641632542594619L;
     private CartService cartService;
 
     @Override
