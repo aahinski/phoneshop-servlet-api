@@ -9,10 +9,6 @@
              scope="request"/>
 
 <tags:master pageTitle="Product Details">
-    <div>
-        <tags:cart cart="${cart}"/>
-    </div>
-
     <c:if test="${not empty param.message}">
         <div class="success">
                 ${param.message}

@@ -8,23 +8,18 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 <jsp:useBean id="recently_viewed" type="com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProducts"
              scope="request"/>
-<jsp:useBean id="error" scope="request" type="java.lang.String"/>
 
 <tags:master pageTitle="Product List">
     <h2>
         Welcome to Expert-Soft training!
     </h2>
 
-    <div>
-        <tags:cart cart="${cart}"/>
-    </div>
-
     <c:if test="${not empty param.message}">
         <div class="success">
                 ${param.message}
         </div>
     </c:if>
-    <c:if test="${not empty error}">
+    <c:if test="${not empty param.error}">
         <div class="error">
             There was an error added to cart
         </div>
@@ -68,10 +63,10 @@
                         </a>
                     </td>
                     <td class="quantity">
-                        <input name="quantity${product.id}" value="${not empty error ? param.quantity : 1}">
-                        <c:if test="${productId eq productIndex.index}">
+                        <input name="quantity${product.id}" value="1">
+                        <c:if test="${param.errorProductId eq product.id}">
                             <div class="error">
-                                    ${error}
+                                    ${param.error}
                             </div>
                         </c:if>
                         <input type="hidden" name="productId" value="${product.id}"/>

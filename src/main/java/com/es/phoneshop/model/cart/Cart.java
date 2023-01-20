@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Cart implements Serializable {
+    private static final long serialVersionUID = -7532954868936519665L;
     private List<CartItem> items;
 
     private int totalQuantity;

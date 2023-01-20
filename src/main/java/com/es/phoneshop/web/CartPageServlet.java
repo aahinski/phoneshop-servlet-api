@@ -17,11 +17,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class CartPageServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 8174769907867467091L;
     private ProductDao productDao;
 
     private CartService cartService;
@@ -45,19 +44,10 @@ public class CartPageServlet extends HttpServlet {
         String[] productIds = request.getParameterValues("productId");
         String[] quantities = request.getParameterValues("quantity");
 
-        Map<Long, String> updates = IntStream
-                .range(0, productIds.length)
-                .boxed()
-                .collect(Collectors.toMap
-                        (i -> Long.parseLong(productIds[i]),
-                        i -> quantities[i]
-                        )
-                );
-
         Map<Long, String> errors = new HashMap<>();
-        for (Map.Entry<Long, String> update : updates.entrySet()) {
-            Long productId = update.getKey();
-            String quantityString = update.getValue();
+        for (int i = 0; i < productIds.length; i++) {
+            Long productId = Long.parseLong(productIds[i]);
+            String quantityString = quantities[i];
 
             int quantity;
             try {

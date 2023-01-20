@@ -6,12 +6,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class CartItem implements Serializable {
+    private static final long serialVersionUID = -8700653357405546820L;
     private Product product;
     private int quantity;
 
     public CartItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public CartItem() {
     }
 
     public Product getProduct() {

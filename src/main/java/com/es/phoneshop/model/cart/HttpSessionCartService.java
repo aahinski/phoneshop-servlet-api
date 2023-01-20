@@ -124,7 +124,7 @@ public class HttpSessionCartService implements CartService {
                 .map(CartItem::getQuantity)
                 .mapToInt(q -> q).sum());
         cart.setTotalCost(cart.getItems().stream()
-                .map(item -> item.getProduct().getPrice())
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 }

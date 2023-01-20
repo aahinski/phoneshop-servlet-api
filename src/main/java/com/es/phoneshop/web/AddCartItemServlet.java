@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public class AddCartItemServlet extends HttpServlet {
+    private static final long serialVersionUID = 2812860408953942622L;
     private CartService cartService;
 
     @Override
@@ -24,7 +25,7 @@ public class AddCartItemServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String productInfo = request.getPathInfo().substring(1);
         Long productId = Long.valueOf(productInfo);
         String quantityString = request.getParameter("quantity" + productInfo);
@@ -63,7 +64,7 @@ public class AddCartItemServlet extends HttpServlet {
     private void incorrectQuantityError(HttpServletRequest request, HttpServletResponse response,
                                         String errorMessage, Long productId) throws IOException {
         request.setAttribute("error", errorMessage);
-        request.setAttribute("productId", productId);
-        response.sendRedirect(request.getContextPath() + "/products");
+        request.setAttribute("errorProductId", productId);
+        response.sendRedirect(request.getContextPath() + "/products?error=" + errorMessage + "&errorProductId=" + productId);
     }
 }

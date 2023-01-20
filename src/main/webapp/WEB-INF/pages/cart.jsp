@@ -80,7 +80,9 @@
                 </c:forEach>
                 <tr>
                     <td>Total cost</td>
-                    <td>${cart.totalCost}</td>
+                    <td>
+                        ${cart.totalCost}
+                    </td>
                 </tr>
             </table>
             <p>
