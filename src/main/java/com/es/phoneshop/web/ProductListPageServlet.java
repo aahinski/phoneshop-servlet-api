@@ -18,12 +18,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ProductListPageServlet extends HttpServlet {
-
     private static final long serialVersionUID = -6041280192135547888L;
+
     private ProductDao productDao;
-
     private CartService cartService;
-
     private RecentlyViewedProductsService recentlyViewedProductsService;
 
     @Override

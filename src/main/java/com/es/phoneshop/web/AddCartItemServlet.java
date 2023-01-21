@@ -16,6 +16,7 @@ import java.util.Locale;
 
 public class AddCartItemServlet extends HttpServlet {
     private static final long serialVersionUID = 2812860408953942622L;
+
     private CartService cartService;
 
     @Override

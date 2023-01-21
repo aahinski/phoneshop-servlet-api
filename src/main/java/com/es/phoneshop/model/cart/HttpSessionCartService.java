@@ -12,6 +12,7 @@ import java.util.Objects;
 
 public class HttpSessionCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class.getName() + ".cart";
+
     private ProductDao productDao;
 
     private HttpSessionCartService() {
@@ -50,11 +51,7 @@ public class HttpSessionCartService implements CartService {
             Product product = productDao.getProduct(productId);
             Cart cart = getCart(request);
 
-            CartItem cartItem = cart.getItems()
-                    .stream()
-                    .filter(item -> item.getProduct().equals(product))
-                    .findAny()
-                    .orElse(null);
+            CartItem cartItem = findCartItemByProduct(cart, product);
 
             if (cartItem != null) {
                 addExistedInCartProduct(product, cartItem, quantity);
@@ -74,11 +71,7 @@ public class HttpSessionCartService implements CartService {
             Product product = productDao.getProduct(productId);
             Cart cart = getCart(request);
 
-            CartItem cartItem = cart.getItems()
-                    .stream()
-                    .filter(item -> item.getProduct().equals(product))
-                    .findAny()
-                    .orElse(null);
+            CartItem cartItem = findCartItemByProduct(cart, product);
 
             if (cartItem != null) {
                 checkIfQuantityGreaterThanStock(product, quantity);
@@ -126,5 +119,13 @@ public class HttpSessionCartService implements CartService {
         cart.setTotalCost(cart.getItems().stream()
                 .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
+    }
+
+    private CartItem findCartItemByProduct(Cart cart, Product product) {
+        return cart.getItems()
+                .stream()
+                .filter(item -> item.getProduct().equals(product))
+                .findAny()
+                .orElse(null);
     }
 }

@@ -10,6 +10,7 @@ import java.util.Objects;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = 622427696017415963L;
+
     private Long id;
     private String code;
     private String description;

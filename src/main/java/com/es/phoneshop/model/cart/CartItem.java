@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class CartItem implements Serializable {
     private static final long serialVersionUID = -8700653357405546820L;
+
     private Product product;
     private int quantity;
 
@@ -20,6 +21,10 @@ public class CartItem implements Serializable {
 
     public Product getProduct() {
         return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {

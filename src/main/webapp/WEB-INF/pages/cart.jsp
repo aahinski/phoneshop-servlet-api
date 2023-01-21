@@ -81,7 +81,8 @@
                 <tr>
                     <td>Total cost</td>
                     <td>
-                        ${cart.totalCost}
+                        <fmt:formatNumber value="${cart.totalCost}" type="currency"
+                                          currencySymbol="${cart.currency.symbol}"/>
                     </td>
                 </tr>
             </table>

@@ -3,8 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.ProductDao;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,14 +19,12 @@ import java.util.Map;
 public class CartPageServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8174769907867467091L;
-    private ProductDao productDao;
 
     private CartService cartService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
     }
 

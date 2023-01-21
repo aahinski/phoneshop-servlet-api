@@ -21,6 +21,7 @@ import java.util.Locale;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private static final long serialVersionUID = 5487646042246219153L;
+
     private ProductDao productDao;
 
     private CartService cartService;

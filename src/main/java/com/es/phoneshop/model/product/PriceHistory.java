@@ -7,6 +7,7 @@ import java.util.Currency;
 
 public class PriceHistory implements Serializable {
     private static final long serialVersionUID = -2777778953420112400L;
+
     private LocalDateTime startDate;
     private BigDecimal price;
     private Currency currency;
