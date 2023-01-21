@@ -37,23 +37,23 @@ public class AddCartItemServlet extends HttpServlet {
             Double doubleQuantity = format.parse(quantityString).doubleValue();
             quantity = doubleQuantity.intValue();
             if (quantity - doubleQuantity != 0.0) {
-                incorrectQuantityError(request, response, "Number should be integer", productId);
+                incorrectQuantityError(request, response, "Number should be integer", productId, quantityString);
                 return;
             }
         } catch (ParseException e) {
-            incorrectQuantityError(request, response, "Not a number", productId);
+            incorrectQuantityError(request, response, "Not a number", productId, quantityString);
             return;
         }
 
         if (quantity <= 0) {
-            incorrectQuantityError(request, response, "Number should be greater than zero", productId);
+            incorrectQuantityError(request, response, "Number should be greater than zero", productId, quantityString);
             return;
         }
 
         try {
             cartService.add(productId, quantity, request);
         } catch (OutOfStockException e) {
-            incorrectQuantityError(request, response, "Out of stock, available " + e.getStock(), productId);
+            incorrectQuantityError(request, response, "Out of stock, available " + e.getStock(), productId, quantityString);
             return;
         }
 
@@ -62,9 +62,10 @@ public class AddCartItemServlet extends HttpServlet {
     }
 
     private void incorrectQuantityError(HttpServletRequest request, HttpServletResponse response,
-                                        String errorMessage, Long productId) throws IOException {
+                                        String errorMessage, Long productId, String quantityString) throws IOException {
         request.setAttribute("error", errorMessage);
         request.setAttribute("errorProductId", productId);
-        response.sendRedirect(request.getContextPath() + "/products?error=" + errorMessage + "&errorProductId=" + productId);
+        request.setAttribute("errorQuantity", quantityString);
+        response.sendRedirect(request.getContextPath() + "/products?error=" + errorMessage + "&errorProductId=" + productId + "&errorQuantity=" + quantityString);
     }
 }

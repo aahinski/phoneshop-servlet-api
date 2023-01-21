@@ -63,7 +63,7 @@
                         </a>
                     </td>
                     <td class="quantity">
-                        <input name="quantity${product.id}" value="1">
+                        <input name="quantity${product.id}" value="${not empty param.error and param.errorProductId eq product.id ? param.errorQuantity : 1}">
                         <c:if test="${param.errorProductId eq product.id}">
                             <div class="error">
                                     ${param.error}
