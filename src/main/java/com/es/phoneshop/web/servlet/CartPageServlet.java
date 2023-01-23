@@ -43,18 +43,14 @@ public class CartPageServlet extends HttpServlet {
             Long productId = Long.parseLong(productIds[i]);
             String quantityString = quantities[i];
 
-            String errorMessageIfPresentElseQuantity = CartItemQuantityValidationUtil
-                    .errorMessageIfPresentElseQuantity(request, quantityString);
+            String errorMessage = CartItemQuantityValidationUtil.validateQuantity(request, quantityString);
 
-            if(errorMessageIfPresentElseQuantity.equals("Number should be integer") ||
-                    errorMessageIfPresentElseQuantity.equals("Not a number") ||
-                    errorMessageIfPresentElseQuantity.equals("Number should be greater than zero")) {
-                String errorMessage = errorMessageIfPresentElseQuantity;
+            if(errorMessage != null) {
                 errors.put(productId, errorMessage);
                 break;
             }
 
-            int quantity = Integer.parseInt(errorMessageIfPresentElseQuantity);
+            int quantity = CartItemQuantityValidationUtil.parseQuantity(request, quantityString).intValue();
             try {
                 cartService.update(productId, quantity, request);
             } catch (OutOfStockException e) {
