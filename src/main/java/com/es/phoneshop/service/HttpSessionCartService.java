@@ -1,9 +1,12 @@
-package com.es.phoneshop.model.cart;
+package com.es.phoneshop.service;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.ProductNotFoundException;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exception.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

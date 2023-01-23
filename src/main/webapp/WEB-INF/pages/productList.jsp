@@ -21,7 +21,7 @@
     </c:if>
     <c:if test="${not empty param.error}">
         <div class="error">
-            There was an error added to cart
+            There was an error while adding to the cart
         </div>
     </c:if>
     <h1>

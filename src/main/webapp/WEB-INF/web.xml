@@ -11,12 +11,12 @@
   </context-param>
 
   <listener>
-    <listener-class>com.es.phoneshop.web.DemoDataServletContextListener</listener-class>
+    <listener-class>com.es.phoneshop.web.listener.DemoDataServletContextListener</listener-class>
   </listener>
 
   <servlet>
     <servlet-name>productList</servlet-name>
-    <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.ProductListPageServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -26,7 +26,7 @@
 
   <servlet>
     <servlet-name>miniCart</servlet-name>
-    <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.MiniCartServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -36,7 +36,7 @@
 
   <servlet>
     <servlet-name>cart</servlet-name>
-    <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.CartPageServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -46,7 +46,7 @@
 
   <servlet>
     <servlet-name>deleteCartItem</servlet-name>
-    <servlet-class>com.es.phoneshop.web.DeleteCartItemServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.DeleteCartItemServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -56,7 +56,7 @@
 
   <servlet>
     <servlet-name>product</servlet-name>
-    <servlet-class>com.es.phoneshop.web.ProductDetailsPageServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.ProductDetailsPageServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -66,7 +66,7 @@
 
   <servlet>
     <servlet-name>addCartItem</servlet-name>
-    <servlet-class>com.es.phoneshop.web.AddCartItemServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.servlet.AddCartItemServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -76,7 +76,7 @@
 
   <error-page>
     <location>/WEB-INF/pages/errorProductNotFound.jsp</location>
-    <exception-type>com.es.phoneshop.model.product.ProductNotFoundException</exception-type>
+    <exception-type>com.es.phoneshop.exception.ProductNotFoundException</exception-type>
   </error-page>
 
   <error-page>

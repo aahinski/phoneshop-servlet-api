@@ -1,13 +1,13 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlet;
 
-import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.HttpSessionCartService;
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.SortField;
-import com.es.phoneshop.model.product.SortOrder;
-import com.es.phoneshop.model.recentlyViewedProducts.DefaultRecentlyViewedProductsService;
-import com.es.phoneshop.model.recentlyViewedProducts.RecentlyViewedProductsService;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.HttpSessionCartService;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.enumeration.SortField;
+import com.es.phoneshop.enumeration.SortOrder;
+import com.es.phoneshop.service.DefaultRecentlyViewedProductsService;
+import com.es.phoneshop.service.RecentlyViewedProductsService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;

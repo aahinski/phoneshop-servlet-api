@@ -1,9 +1,12 @@
 package com.es.phoneshop.model.cart;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.exception.OutOfStockException;
+import com.es.phoneshop.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
-import com.es.phoneshop.model.product.ProductNotFoundException;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exception.ProductNotFoundException;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.HttpSessionCartService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

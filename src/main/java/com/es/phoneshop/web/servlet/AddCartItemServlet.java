@@ -1,8 +1,9 @@
-package com.es.phoneshop.web;
+package com.es.phoneshop.web.servlet;
 
-import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.HttpSessionCartService;
-import com.es.phoneshop.model.cart.OutOfStockException;
+import com.es.phoneshop.util.CartItemQuantityValidationUtil;
+import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.HttpSessionCartService;
+import com.es.phoneshop.exception.OutOfStockException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,9 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 public class AddCartItemServlet extends HttpServlet {
     private static final long serialVersionUID = 2812860408953942622L;
@@ -31,26 +29,19 @@ public class AddCartItemServlet extends HttpServlet {
         Long productId = Long.valueOf(productInfo);
         String quantityString = request.getParameter("quantity" + productInfo);
 
-        int quantity;
-        try {
-            Locale locale = request.getLocale();
-            NumberFormat format = NumberFormat.getInstance(locale);
-            Double doubleQuantity = format.parse(quantityString).doubleValue();
-            quantity = doubleQuantity.intValue();
-            if (quantity - doubleQuantity != 0.0) {
-                incorrectQuantityError(request, response, "Number should be integer", productId, quantityString);
-                return;
-            }
-        } catch (ParseException e) {
-            incorrectQuantityError(request, response, "Not a number", productId, quantityString);
+        String errorMessageIfPresentElseQuantity = CartItemQuantityValidationUtil
+                .errorMessageIfPresentElseQuantity(request, quantityString);
+
+        if(errorMessageIfPresentElseQuantity.equals("Number should be integer") ||
+                errorMessageIfPresentElseQuantity.equals("Not a number") ||
+                errorMessageIfPresentElseQuantity.equals("Number should be greater than zero"))
+        {
+            String errorMessage = errorMessageIfPresentElseQuantity;
+            incorrectQuantityError(request, response, errorMessage, productId, quantityString);
             return;
         }
 
-        if (quantity <= 0) {
-            incorrectQuantityError(request, response, "Number should be greater than zero", productId, quantityString);
-            return;
-        }
-
+        int quantity = Integer.parseInt(errorMessageIfPresentElseQuantity);
         try {
             cartService.add(productId, quantity, request);
         } catch (OutOfStockException e) {
