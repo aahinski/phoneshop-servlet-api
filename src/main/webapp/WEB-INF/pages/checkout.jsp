@@ -4,9 +4,9 @@
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <script src="${pageContext.servletContext.contextPath}/js/main.js"></script>
 
-<jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
+<jsp:useBean id="order" type="com.es.phoneshop.model.order.Order" scope="request"/>
 
-<tags:master pageTitle="Cart">
+<tags:master pageTitle="Order">
     <div>
         <h3>
             Cart
@@ -21,7 +21,7 @@
                 There was an error while updating the cart
             </div>
         </c:if>
-        <form method="post" action="${pageContext.servletContext.contextPath}/cart">
+        <form method="post" action="${pageContext.servletContext.contextPath}/checkout">
             <table>
                 <thead>
                 <tr>
@@ -40,7 +40,7 @@
                     <td></td>
                 </tr>
                 </thead>
-                <c:forEach var="cartItem" items="${cart.items}" varStatus="cartItemIndex">
+                <c:forEach var="cartItem" items="${order.items}" varStatus="cartItemIndex">
                     <tr>
                         <td>
                             <img class="product-tile" src="${cartItem.product.imageUrl}">
@@ -63,36 +63,52 @@
                         </td>
                         <td class="quantity">
                             <fmt:formatNumber value="${cartItem.quantity}" var="quantity"/>
-                            <c:set var="error" value="${errors[cartItem.product.id]}"/>
-                            <input name="quantity" value="${not empty error ? paramValues['quantity'][cartItemIndex.index] : cartItem.quantity}" class="quantity"/>
-                            <c:if test="${not empty error}">
-                                <div class="error">
-                                        ${errors[cartItem.product.id]}
-                                </div>
-                            </c:if>
-                            <input type="hidden" name="productId" value="${cartItem.product.id}"/>
-                        </td>
-                        <td>
-                            <button id="deleteCartItem"
-                                    formaction="${pageContext.servletContext.contextPath}/cart/deleteCartItem/${cartItem.product.id}">Delete</button>
+                            ${cartItem.quantity}
                         </td>
                     </tr>
                 </c:forEach>
                 <tr>
-                    <td>Total cost</td>
+                    <td>Subtotal</td>
                     <td>
-                        <fmt:formatNumber value="${cart.totalCost}" type="currency"
-                                          currencySymbol="${cart.currency.symbol}"/>
+                        <fmt:formatNumber value="${order.subtotal}" type="currency"
+                                          currencySymbol="${order.currency.symbol}"/>
+                    </td>
+                    <td>Delivery Cost</td>
+                    <td>
+                        <fmt:formatNumber value="${order.deliveryCost}" type="currency"
+                                          currencySymbol="${order.currency.symbol}"/>
+                    </td>
+                    <td>Total Cost</td>
+                    <td>
+                        <fmt:formatNumber value="${order.totalCost}" type="currency"
+                                          currencySymbol="${order.currency.symbol}"/>
+                    </td>
+                </tr>
+            </table>
+            <h2>
+                Your details
+            </h2>
+            <table>
+                <tags:orderFormRow name="firstName" label="First Name" order="${order}" errors="${errors}"/>
+                <tags:orderFormRow name="lastName" label="Last Name" order="${order}" errors="${errors}"/>
+                <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}"/>
+                <tags:orderFormRow name="deliveryDate" label="Delivery Date" order="${order}" errors="${errors}"/>
+                <tags:orderFormRow name="deliveryAddress" label="Delivery Address" order="${order}" errors="${errors}"/>
+                <tr>
+                    <td>Payment Method<span style="color:red">*</span></td>
+                    <td>
+                        <select name="paymentMethod">
+                            <option></option>
+                            <c:forEach var="paymentMethod" items="${paymentMethods}">
+                                <option>${paymentMethod}</option>
+                            </c:forEach>
+                        </select>
                     </td>
                 </tr>
             </table>
             <p>
-                <button>Update</button>
+                <button>Order</button>
             </p>
         </form>
-        <form action="${pageContext.servletContext.contextPath}/checkout">
-            <button>Checkout</button>
-        </form>
-        <form id="deleteCartItem" method="post"></form>
     </div>
 </tags:master>
