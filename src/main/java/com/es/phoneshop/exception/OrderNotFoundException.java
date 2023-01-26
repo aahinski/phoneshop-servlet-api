@@ -9,6 +9,10 @@ public class OrderNotFoundException extends RuntimeException implements Supplier
         this.id = id;
     }
 
+    public OrderNotFoundException() {
+
+    }
+
     public Long getId() {
         return id;
     }

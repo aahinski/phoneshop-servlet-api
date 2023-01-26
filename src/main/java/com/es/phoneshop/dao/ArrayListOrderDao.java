@@ -1,17 +1,11 @@
 package com.es.phoneshop.dao;
 
-import com.es.phoneshop.enumeration.SortField;
-import com.es.phoneshop.enumeration.SortOrder;
 import com.es.phoneshop.exception.OrderNotFoundException;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.order.Order;
-import com.es.phoneshop.model.product.PriceHistory;
-import com.es.phoneshop.model.product.Product;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArrayListOrderDao implements OrderDao {
     private static OrderDao instance;
@@ -41,6 +35,18 @@ public class ArrayListOrderDao implements OrderDao {
                 .filter(order -> id.equals(order.getId()))
                 .findAny()
                 .orElseThrow(new OrderNotFoundException(id));
+    }
+
+    @Override
+    public Order getOrderBySecureId(String id) throws OrderNotFoundException {
+        if (id == null) {
+            throw new OrderNotFoundException(null);
+        }
+
+        return orders.stream()
+                .filter(order -> id.equals(order.getSecureId()))
+                .findAny()
+                .orElseThrow(new OrderNotFoundException());
     }
 
     @Override

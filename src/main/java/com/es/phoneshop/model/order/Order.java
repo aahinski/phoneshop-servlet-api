@@ -6,10 +6,10 @@ import com.es.phoneshop.model.cart.Cart;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
-import java.util.Date;
 
 public class Order extends Cart {
     private Long id;
+    private String secureId;
     private BigDecimal subtotal;
     private BigDecimal deliveryCost;
     private Currency currency;
@@ -106,5 +106,13 @@ public class Order extends Cart {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setSecureId(String secureId) {
+        this.secureId = secureId;
+    }
+
+    public String getSecureId() {
+        return secureId;
     }
 }

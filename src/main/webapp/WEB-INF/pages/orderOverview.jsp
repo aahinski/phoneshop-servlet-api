@@ -9,19 +9,9 @@
 <tags:master pageTitle="Order">
     <div>
         <h3>
-            Cart
+            Order
         </h3>
-        <c:if test="${not empty param.message}">
-            <div class="success">
-                    ${param.message}
-            </div>
-        </c:if>
-        <c:if test="${not empty errors}">
-            <div class="error">
-                There was an error while updating the cart
-            </div>
-        </c:if>
-        <form method="post" action="${pageContext.servletContext.contextPath}/checkout">
+        <form>
             <table>
                 <thead>
                 <tr>
@@ -89,27 +79,49 @@
                 Your details
             </h2>
             <table>
-                <tags:orderFormRow name="firstName" label="First Name" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="lastName" label="Last Name" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="deliveryDate" label="Delivery Date" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="deliveryAddress" label="Delivery Address" order="${order}" errors="${errors}"/>
-                <%-- <tr>
-                    <td>Payment Method<span style="color:red">*</span></td>
+                </tr>
+                <tr>
+                    <td>First name</td>
                     <td>
-                        <select name="paymentMethod">
-                            <option></option>
-                            <c:forEach var="paymentMethod" items="${paymentMethods}">
-                                <option>${paymentMethod}</option>
-                            </c:forEach>
-                        </select>
+                            ${order.firstName}
                     </td>
-                </tr> --%>
-                <tags:orderFormRow name="paymentMethod" label="Payment Method" order="${order}" errors="${errors}"/>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Last name</td>
+                    <td>
+                            ${order.lastName}
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>
+                            ${order.phone}
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Delivery date</td>
+                    <td>
+                            ${order.deliveryDate}
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Delivery address</td>
+                    <td>
+                            ${order.deliveryAddress}
+                    </td>
+                </tr>
+                </tr>
+                <tr>
+                    <td>Payment method</td>
+                    <td>
+                            ${order.paymentMethod}
+                    </td>
+                </tr>
             </table>
-            <p>
-                <button>Order</button>
-            </p>
         </form>
     </div>
 </tags:master>
