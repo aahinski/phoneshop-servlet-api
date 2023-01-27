@@ -5,6 +5,7 @@
 <script src="${pageContext.servletContext.contextPath}/js/main.js"></script>
 
 <jsp:useBean id="order" type="com.es.phoneshop.model.order.Order" scope="request"/>
+<jsp:useBean id="paymentMethods" scope="request" type="java.util.List"/>
 
 <tags:master pageTitle="Order">
     <div>
@@ -92,20 +93,42 @@
                 <tags:orderFormRow name="firstName" label="First Name" order="${order}" errors="${errors}"/>
                 <tags:orderFormRow name="lastName" label="Last Name" order="${order}" errors="${errors}"/>
                 <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="deliveryDate" label="Delivery Date" order="${order}" errors="${errors}"/>
+
+                <tr>
+                    <td>Delivery Date<span style="color:red">*</span></td>
+                    <td>
+                        <c:set var="date" value="deliveryDate" />
+                        <c:set var="error" value="${errors[date]}" />
+                        <input type="date" name=${date} value="${param[date]}"/>
+                        <c:if test="${not empty error}">
+                            <div class="error">
+                                    ${error}
+                            </div>
+                        </c:if>
+                    </td>
+                </tr>
+
+
                 <tags:orderFormRow name="deliveryAddress" label="Delivery Address" order="${order}" errors="${errors}"/>
-                <%-- <tr>
+
+                <tr>
                     <td>Payment Method<span style="color:red">*</span></td>
                     <td>
+                        <c:set var="method" value="paymentMethod" />
+                        <c:set var="error" value="${errors[method]}" />
                         <select name="paymentMethod">
                             <option></option>
                             <c:forEach var="paymentMethod" items="${paymentMethods}">
                                 <option>${paymentMethod}</option>
                             </c:forEach>
                         </select>
+                        <c:if test="${not empty error}">
+                            <div class="error">
+                                    ${error}
+                            </div>
+                        </c:if>
                     </td>
-                </tr> --%>
-                <tags:orderFormRow name="paymentMethod" label="Payment Method" order="${order}" errors="${errors}"/>
+                </tr>
             </table>
             <p>
                 <button>Order</button>

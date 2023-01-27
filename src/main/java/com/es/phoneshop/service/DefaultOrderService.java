@@ -4,12 +4,15 @@ import com.es.phoneshop.dao.ArrayListOrderDao;
 import com.es.phoneshop.dao.OrderDao;
 import com.es.phoneshop.enumeration.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.order.Order;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class DefaultOrderService implements OrderService {
     private OrderDao orderDao;
@@ -31,7 +34,14 @@ public class DefaultOrderService implements OrderService {
     public Order getOrder(Cart cart) {
         Order order = new Order();
 
-        order.setItems(cart.getItems());
+        order.setItems(cart.getItems().stream().map(item -> {
+                    try {
+                        return (CartItem) item.clone();
+                    } catch (CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList())
+        );
 
         order.setSubtotal(cart.getTotalCost());
         order.setDeliveryCost(calculateDeliveryCost());
@@ -46,8 +56,10 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) {
+    public void placeOrder(Order order, HttpServletRequest request) {
         order.setSecureId(UUID.randomUUID().toString());
+        CartService cartService = HttpSessionCartService.getInstance();
+        cartService.getCart(request).getItems().clear();
         orderDao.save(order);
     }
 

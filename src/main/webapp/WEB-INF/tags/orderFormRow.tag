@@ -9,7 +9,7 @@
     <td>${label}<span style="color:red">*</span></td>
     <td>
         <c:set var="error" value="${errors[name]}" />
-        <input name=${name} value="${not empty error ? param[name] : order[name]}"/>
+        <input name=${name} value="${param[name]}"/>
         <c:if test="${not empty error}">
             <div class="error">
                     ${error}

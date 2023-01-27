@@ -6,6 +6,7 @@ import com.es.phoneshop.model.cart.Cart;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
+import java.util.Objects;
 
 public class Order extends Cart {
     private Long id;
@@ -114,5 +115,19 @@ public class Order extends Cart {
 
     public String getSecureId() {
         return secureId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Order order = (Order) o;
+        return Objects.equals(subtotal, order.subtotal) && Objects.equals(deliveryCost, order.deliveryCost) && Objects.equals(currency, order.currency) && Objects.equals(firstName, order.firstName) && Objects.equals(lastName, order.lastName) && Objects.equals(phone, order.phone) && Objects.equals(deliveryDate, order.deliveryDate) && Objects.equals(deliveryAddress, order.deliveryAddress) && paymentMethod == order.paymentMethod;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subtotal, deliveryCost, currency, firstName, lastName, phone, deliveryDate, deliveryAddress, paymentMethod);
     }
 }

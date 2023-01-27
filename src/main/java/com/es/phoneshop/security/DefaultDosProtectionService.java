@@ -11,6 +11,7 @@ public class DefaultDosProtectionService implements DosProtectionService {
     private Map<String, Long> countMap = new ConcurrentHashMap<>();
 
     private DefaultDosProtectionService() {
+        reset = new Date();
     }
 
     private static DefaultDosProtectionService instance;
