@@ -85,7 +85,7 @@ public class DefaultOrderServiceTest {
     private Order createNewOrder(Long orderId) {
         Order order = new Order();
         List<CartItem> cartItems = new ArrayList<>();
-        CartItem cartItem = new CartItem(productDao.getProduct(1L), 1);
+        CartItem cartItem = new CartItem(productDao.findById(1L), 1);
         cartItems.add(cartItem);
         order.setItems(cartItems);
         if (orderId != null) {

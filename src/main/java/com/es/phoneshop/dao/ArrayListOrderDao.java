@@ -3,10 +3,11 @@ package com.es.phoneshop.dao;
 import com.es.phoneshop.exception.OrderNotFoundException;
 import com.es.phoneshop.model.order.Order;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
-public class ArrayListOrderDao implements OrderDao {
+public class ArrayListOrderDao extends GenericDao<Order> implements OrderDao {
     private static OrderDao instance;
 
     public static synchronized OrderDao getInstance() {
@@ -16,59 +17,32 @@ public class ArrayListOrderDao implements OrderDao {
         return instance;
     }
 
-    private long maxId;
-    private List<Order> orders;
-
     private ArrayListOrderDao() {
-        this.maxId = 1L;
-        this.orders = new ArrayList<>();
     }
 
     @Override
-    public synchronized Order getOrder(Long id) throws OrderNotFoundException {
+    public Order findBySecureId(String id) throws OrderNotFoundException {
         if (id == null) {
             throw new OrderNotFoundException(null);
         }
 
-        return orders.stream()
-                .filter(order -> id.equals(order.getId()))
-                .findAny()
-                .orElseThrow(new OrderNotFoundException(id));
-    }
-
-    @Override
-    public Order getOrderBySecureId(String id) throws OrderNotFoundException {
-        if (id == null) {
-            throw new OrderNotFoundException(null);
-        }
-
-        return orders.stream()
+        return items.stream()
                 .filter(order -> id.equals(order.getSecureId()))
                 .findAny()
                 .orElseThrow(new OrderNotFoundException());
     }
 
-    @Override
-    public synchronized void save(Order order) {
-        try {
-            Order orderToUpdate = getOrder(order.getId());
-            orders.remove(orderToUpdate);
-        } catch (OrderNotFoundException e) {
-            order.setId(maxId++);
-        } finally {
-            orders.add(order);
-        }
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
     public void setOrders(List<Order> orders) {
-        this.orders = orders;
+        this.items = orders;
     }
 
     public void setMaxId(long maxId) {
         this.maxId = maxId;
+    }
+
+    @Override
+    protected Supplier<? extends NoSuchElementException> getItemNotFoundExceptionSupplier(Long id) {
+        OrderNotFoundException exception = new OrderNotFoundException(id);
+        return exception::get;
     }
 }

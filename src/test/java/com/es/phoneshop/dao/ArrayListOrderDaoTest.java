@@ -35,32 +35,32 @@ public class ArrayListOrderDaoTest {
 
     @Test
     public void testGetOrder() {
-        Order order = orderDao.getOrder(1L);
+        Order order = orderDao.findById(1L);
 
         assertEquals(createNewOrder(1L), order);
     }
 
     @Test(expected = OrderNotFoundException.class)
     public void testGetOrderWithIncorrectId() {
-        orderDao.getOrder(2L);
+        orderDao.findById(2L);
     }
 
     @Test
     public void testGetOrderBySecureId() {
-        Order order = orderDao.getOrderBySecureId("secureId");
+        Order order = orderDao.findBySecureId("secureId");
 
         assertEquals(createNewOrder(1L), order);
     }
 
     @Test(expected = OrderNotFoundException.class)
     public void testGetOrderBySecureIdWithIncorrectId() {
-       orderDao.getOrderBySecureId("anotherSecureId");
+       orderDao.findBySecureId("anotherSecureId");
     }
 
     private Order createNewOrder(Long orderId) {
         Order order = new Order();
         List<CartItem> cartItems = new ArrayList<>();
-        CartItem cartItem = new CartItem(productDao.getProduct(1L), 1);
+        CartItem cartItem = new CartItem(productDao.findById(1L), 1);
         cartItems.add(cartItem);
         order.setItems(cartItems);
         if (orderId != null) {

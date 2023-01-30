@@ -29,7 +29,7 @@ public class ArrayListProductDaoTest {
         productDao.save(product);
 
         assertTrue(product.getId() > 0);
-        Product result = productDao.getProduct(product.getId());
+        Product result = productDao.findById(product.getId());
         assertNotNull(result);
         assertEquals("test", result.getCode());
     }
@@ -58,7 +58,7 @@ public class ArrayListProductDaoTest {
 
         productDao.save(productAfterChanges);
 
-        assertEquals(productDao.getProduct(productBeforeChanges.getId()), productAfterChanges);
+        assertEquals(productDao.findById(productBeforeChanges.getId()), productAfterChanges);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ArrayListProductDaoTest {
         Product product = new Product("test", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
 
-        assertEquals(product, productDao.getProduct(product.getId()));
+        assertEquals(product, productDao.findById(product.getId()));
     }
 
 
@@ -103,12 +103,12 @@ public class ArrayListProductDaoTest {
         Product product = new Product("test", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
 
-        productDao.getProduct(product.getId() + 1L);
+        productDao.findById(product.getId() + 1L);
     }
 
     @Test(expected = ProductNotFoundException.class)
     public void testGetProductNullId() throws ProductNotFoundException {
-        productDao.getProduct(null);
+        productDao.findById(null);
     }
 
     @Test

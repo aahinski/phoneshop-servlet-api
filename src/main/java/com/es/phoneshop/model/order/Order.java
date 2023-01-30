@@ -1,5 +1,6 @@
 package com.es.phoneshop.model.order;
 
+import com.es.phoneshop.dao.DaoEntity;
 import com.es.phoneshop.enumeration.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
 
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Currency;
 import java.util.Objects;
 
-public class Order extends Cart {
+public class Order extends Cart implements DaoEntity<Order> {
     private Long id;
     private String secureId;
     private BigDecimal subtotal;
@@ -101,10 +102,12 @@ public class Order extends Cart {
         this.paymentMethod = paymentMethod;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
 
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
