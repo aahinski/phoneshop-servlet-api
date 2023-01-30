@@ -42,7 +42,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findProducts(String query, SortField sortField, SortOrder sortOrder) {
+    public synchronized List<Product> findProductsByQueryAndSortParameters(String query, SortField sortField, SortOrder sortOrder) {
         Stream<Product> unsortedDesiredProductsStream =
                 products.stream()
                         .filter(product -> (

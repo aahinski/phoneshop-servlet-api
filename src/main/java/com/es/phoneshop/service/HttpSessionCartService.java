@@ -98,6 +98,13 @@ public class HttpSessionCartService implements CartService {
         }
     }
 
+    @Override
+    public void clearCart(HttpServletRequest request) {
+        Cart cart = getCart(request);
+        cart.getItems().clear();
+        recalculateCart(cart);
+    }
+
     private void addExistedInCartProduct(Product product, CartItem cartItem, int quantity) throws OutOfStockException {
         quantity += cartItem.getQuantity();
         checkIfQuantityGreaterThanStock(product, quantity);

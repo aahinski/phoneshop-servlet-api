@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 
 public class DefaultOrderService implements OrderService {
     private OrderDao orderDao;
+    private CartService cartService;
 
     private DefaultOrderService() {
         orderDao = ArrayListOrderDao.getInstance();
+        cartService = HttpSessionCartService.getInstance();
     }
 
     private static OrderService instance;
@@ -58,8 +60,7 @@ public class DefaultOrderService implements OrderService {
     @Override
     public void placeOrder(Order order, HttpServletRequest request) {
         order.setSecureId(UUID.randomUUID().toString());
-        CartService cartService = HttpSessionCartService.getInstance();
-        cartService.getCart(request).getItems().clear();
+        cartService.clearCart(request);
         orderDao.save(order);
     }
 
