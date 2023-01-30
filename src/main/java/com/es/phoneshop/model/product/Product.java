@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.dao.DaoEntity;
+import com.es.phoneshop.model.DaoEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

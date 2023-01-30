@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.order;
 
-import com.es.phoneshop.dao.DaoEntity;
+import com.es.phoneshop.model.DaoEntity;
 import com.es.phoneshop.enumeration.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
 
