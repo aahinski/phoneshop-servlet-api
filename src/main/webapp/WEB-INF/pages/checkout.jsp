@@ -92,7 +92,7 @@
             <table>
                 <tags:orderFormRow name="firstName" label="First Name" order="${order}" errors="${errors}"/>
                 <tags:orderFormRow name="lastName" label="Last Name" order="${order}" errors="${errors}"/>
-                <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}"/>
+                <tags:orderFormRow name="phone" label="Phone" order="${order}" errors="${errors}" placeholder="+375 XX XXX XX XX"/>
 
                 <tr>
                     <td>Delivery Date<span style="color:red">*</span></td>
