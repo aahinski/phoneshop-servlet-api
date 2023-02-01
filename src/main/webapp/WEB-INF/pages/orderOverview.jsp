@@ -27,7 +27,6 @@
                     <td>
                         Quantity
                     </td>
-                    <td></td>
                 </tr>
                 </thead>
                 <c:forEach var="cartItem" items="${order.items}" varStatus="cartItemIndex">
@@ -68,11 +67,15 @@
                         <fmt:formatNumber value="${order.deliveryCost}" type="currency"
                                           currencySymbol="${order.currency.symbol}"/>
                     </td>
+                </tr>
+                <tr>
+                    <td></td>
                     <td>Total Cost</td>
                     <td>
                         <fmt:formatNumber value="${order.totalCost}" type="currency"
                                           currencySymbol="${order.currency.symbol}"/>
                     </td>
+                    <td></td>
                 </tr>
             </table>
             <h2>
