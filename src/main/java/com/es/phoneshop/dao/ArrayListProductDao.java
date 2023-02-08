@@ -1,11 +1,13 @@
 package com.es.phoneshop.dao;
 
+import com.es.phoneshop.enumeration.SearchOption;
 import com.es.phoneshop.enumeration.SortField;
 import com.es.phoneshop.enumeration.SortOrder;
 import com.es.phoneshop.exception.ProductNotFoundException;
 import com.es.phoneshop.model.product.PriceHistory;
 import com.es.phoneshop.model.product.Product;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -52,6 +54,32 @@ public class ArrayListProductDao extends GenericDao<Product> implements ProductD
         return unsortedDesiredProductsStream.sorted(productComparator).collect(Collectors.toList());
     }
 
+    @Override
+    public List<Product> findProductsByAdvancedSearch(String description, BigDecimal minPrice, BigDecimal maxPrice, SearchOption searchOption) {
+        List<Product> products = getProductsWithPriceInRange(minPrice, maxPrice);
+        if (description == null || description.isEmpty()) {
+            return products;
+        } else {
+            switch (searchOption) {
+                case ANY_WORD:
+                    return products.stream()
+                            .filter(product -> (containsAnyQueryWords(product.getDescription().toLowerCase(), description)))
+                            .collect(Collectors.toList());
+                case ALL_WORDS:
+                    return products.stream()
+                            .filter(product -> (containsEveryQueryWord(product.getDescription().toLowerCase(), description)))
+                            .collect(Collectors.toList());
+            }
+        }
+        return null;
+    }
+
+    private List<Product> getProductsWithPriceInRange(BigDecimal minPrice, BigDecimal maxPrice) {
+        return items.stream()
+                .filter(item -> item.getPrice().compareTo(minPrice) > 0 && item.getPrice().compareTo(maxPrice) < 0)
+                .collect(Collectors.toList());
+    }
+
     private Comparator<Product> sortByRelevance(String query) {
         String[] queryWords = query.toLowerCase().split("\\s+");
         Comparator<Product> comparator = Comparator.comparing(product ->
@@ -86,6 +114,11 @@ public class ArrayListProductDao extends GenericDao<Product> implements ProductD
     private boolean containsAnyQueryWords(String description, String query) {
         return Arrays.stream(query.toLowerCase().split("\\s+"))
                 .anyMatch(description::contains);
+    }
+
+    private boolean containsEveryQueryWord(String description, String query) {
+        return Arrays.stream(query.toLowerCase().split("\\s+"))
+                .allMatch(description::contains);
     }
 
     private double productSearchRelevance(String description, String[] queryWords) {
